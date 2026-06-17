@@ -1,0 +1,14 @@
+body {
+  height: 100vw;
+  width: 100vw;
+}
+
+.game-container {
+  display: grid;
+  grid-template-rows: repeat(3, 250px);
+  grid-template-columns: repeat(3, 250px);
+}
+
+.game-tile {
+  background-color: grey;
+}

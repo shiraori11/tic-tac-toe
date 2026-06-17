@@ -1,5 +1,5 @@
 function gamePlayer(marker) {
-  announceWin = () => {console.log(`${marker} Won!`)};
+  announceWin = () => {alert(`${marker} Won!`)};
   
   return {marker, announceWin};
 }
@@ -80,22 +80,52 @@ const playGame = (() => {
     gameOngoing = false;
   };
 
+  const getMarker = () => whoMove.marker;
+
   const isOngoingGame = () => gameOngoing;
 
-  return {addMarkerToBoard, isOngoingGame};
+  return {addMarkerToBoard, isOngoingGame, getMarker};
 })();
 
 gameInterface = (() => {
   
-  const getUserChoice = () => {
-    const getRow = prompt("Row: ");
-    const getCol = prompt("Col: ");
-
-    return [getRow, getCol];
-  };
+  const gameContainer = document.querySelector(".game-container");
 
   const gameLoop = () => {
-    while()
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
+        const gameTile = document.createElement("div");
+        const gameText = document.createElement("p");
+        
+        gameTile.setAttribute("data-row", row);
+        gameTile.setAttribute("data-col", col);
+        gameTile.addEventListener("click", placeMarker);
+
+        gameTile.append(gameText);
+        
+        gameTile.setAttribute("class", "game-tile");
+        gameContainer.appendChild(gameTile);
+      }
+    }
   }
+
+  const placeMarker = (event) => {
+    const addMarkerRow = event.target.dataset.row;
+    const addMarkerCol = event.target.dataset.col;
+    
+    event.target.innerHTML = "";
+
+    const currentMarker = playGame.getMarker();
+    
+    const markerTile = document.createElement("p");
+    markerTile.textContent = currentMarker;
+
+    event.target.appendChild(markerTile);
+    
+    playGame.addMarkerToBoard(addMarkerRow, addMarkerCol);
+  };
   
+  return {gameLoop};
 })();
+
+gameInterface.gameLoop();
