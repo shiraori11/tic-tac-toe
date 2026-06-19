@@ -11,33 +11,40 @@ const gameBoard = (() => {
     ["n", "n", "n"],
   ];
 
+  const player1 = gamePlayer("X");
+  const player2 = gamePlayer("O")
+  let whoPlayerMove = player1;
+
   const mark = (row, col, marker) => {
     board[row][col] = marker;
   }
 
-  const getBoard = () => board;
+  const changeWhoPlayerMove = () => {
+    if (whoPlayerMove == player1) {
+      whoPlayerMove = player2;
+    } else {
+      whoPlayerMove = player1;
+    }
+  }
 
-  return {mark, getBoard};
+  const getBoard = () => board;
+  const getWhoPlayerMove = () => whoPlayerMove;
+  const getPlayerMark = () => whoPlayerMove.marker;
+
+  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark};
 })();
 
 const playGame = (() => {
-
-
-  const player1 = gamePlayer("X");
-  const player2 = gamePlayer("O");
-  let whoMove = player1;
   let gameOngoing = true;
   const board = gameBoard.getBoard();
 
 
   const addMarkerToBoard = (row, col) => {
+    const whoMove = gameBoard.getWhoPlayerMove();
+    
     gameBoard.mark(row, col, whoMove.marker);
     checkBoardWin(row, col, whoMove);
-    if (whoMove == player1) {
-      whoMove = player2;
-    } else {
-      whoMove = player1;
-    }
+    gameBoard.changeWhoPlayerMove();
   };
 
   const checkBoardWin = (row, col, player) => {
@@ -72,7 +79,7 @@ const playGame = (() => {
   };
 
   const checkEveryValue = (arr, valueToCheck) => {
-    return arr.every((value) => value == valueToCheck && value != 'n');
+    return arr.every((value) => value === valueToCheck && value != 'n');
   };
 
   const announceWhoWon = (player) => {
@@ -92,6 +99,10 @@ gameInterface = (() => {
   const gameContainer = document.querySelector(".game-container");
 
   const gameLoop = () => {
+    addTileToInterface();
+  }
+
+  const addTileToInterface = () => {
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         const gameTile = document.createElement("div");
@@ -99,7 +110,7 @@ gameInterface = (() => {
         
         gameTile.setAttribute("data-row", row);
         gameTile.setAttribute("data-col", col);
-        gameTile.addEventListener("click", placeMarker);
+        gameTile.addEventListener("click", tileFunc);
 
         gameTile.append(gameText);
         
@@ -109,13 +120,24 @@ gameInterface = (() => {
     }
   }
 
+  const changeMarkerIndicator = () => {
+    const markerIndicator = document.querySelector(".marker-indicator");
+    markerIndicator.textContent = gameBoard.getPlayerMark();
+  }
+
+  const tileFunc = (event) => {
+    if (checkIfMarkerExist(event) && playGame.isOngoingGame()) {
+      placeMarker(event);
+    }
+  }
+
   const placeMarker = (event) => {
     const addMarkerRow = event.target.dataset.row;
     const addMarkerCol = event.target.dataset.col;
     
     event.target.innerHTML = "";
 
-    const currentMarker = playGame.getMarker();
+    const currentMarker = gameBoard.getPlayerMark();
     
     const markerTile = document.createElement("p");
     markerTile.textContent = currentMarker;
@@ -123,7 +145,15 @@ gameInterface = (() => {
     event.target.appendChild(markerTile);
     
     playGame.addMarkerToBoard(addMarkerRow, addMarkerCol);
+    
+    changeMarkerIndicator();
   };
+
+  const checkIfMarkerExist = (event) => {
+    const markerPara = event.target.firstElementChild;
+
+    return markerPara.textContent == "";
+  }
   
   return {gameLoop};
 })();
