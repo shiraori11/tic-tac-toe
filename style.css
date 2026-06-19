@@ -13,13 +13,62 @@ body {
   display: grid;
   grid-template-rows: repeat(3, 150px);
   grid-template-columns: repeat(3, 150px);
+  gap: 5px;
 }
 
 .marker-indicator {
   height: 100px;
   width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 2px grey;
+  margin-bottom: 5px;
+}
+
+.display-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.left-player-name {
+  display: flex;
+}
+
+.left-player-name input{
+  text-align: right;
+}
+
+.marker-indicator p,
+.game-tile p {
+  margin: 0;
+  padding: 0; 
+  font-weight: bold;
+  color: grey;
+}
+
+.marker-indicator p {
+  font-size: 75px;
+}
+
+.winner-container {
+  position: absolute;
+  height: auto;
+  width: auto;
+  display: grid;
+  justify-items: center;
+  align-items: center;
 }
 
 .game-tile {
-  background-color: grey;
+  background-color: white;
+  border: solid 2px grey;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.game-tile p {
+  font-size: 125px;
 }

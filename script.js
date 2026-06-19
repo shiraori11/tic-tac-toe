@@ -1,7 +1,15 @@
 function gamePlayer(marker) {
-  announceWin = () => {alert(`${marker} Won!`)};
+  let score = 0;
+  let name = `Player ${marker}`;
+  const winner = false
   
-  return {marker, announceWin};
+  const announceWin = () => {alert(`${marker} Won!`)};
+  
+  const addScore = () => {score++};
+  const getScore = () => score;
+  const resetScore = () => {score = 0};
+  
+  return {marker, name, announceWin, winner, addScore, getScore, resetScore};
 }
 
 const gameBoard = (() => {
@@ -14,6 +22,7 @@ const gameBoard = (() => {
   const player1 = gamePlayer("X");
   const player2 = gamePlayer("O")
   let whoPlayerMove = player1;
+  let winnerPlayer;
 
   const mark = (row, col, marker) => {
     board[row][col] = marker;
@@ -30,8 +39,16 @@ const gameBoard = (() => {
   const getBoard = () => board;
   const getWhoPlayerMove = () => whoPlayerMove;
   const getPlayerMark = () => whoPlayerMove.marker;
+  const setWinnerPlayer = () => {
+    if (player1.winner) {
+      winnerPlayer = player1;
+    } else if (player2.winner) {
+      winnerPlayer = player2;
+    }
+  };
+  const getWinnerPlayer = () => winnerPlayer;
 
-  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark};
+  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark, setWinnerPlayer, getWinnerPlayer};
 })();
 
 const playGame = (() => {
@@ -58,23 +75,23 @@ const playGame = (() => {
     const forwardSlashArr = [board[0][2], board[1][1], board[2][0]];
 
     if (checkEveryValue(backSlashArr, board[0][0])) {
-      announceWhoWon(player)
+      setWinnerPlayer(player)
     } else if (checkEveryValue(forwardSlashArr, board[0][2])) {
-      announceWhoWon(player)
+      setWinnerPlayer(player)
     }
   };
 
   const checkRow = (row, player) => {
     const rowArr = [board[row][0], board[row][1], board[row][2]];
     if (checkEveryValue(rowArr, board[row][0])) {
-      announceWhoWon(player);
+      setWinnerPlayer(player);
     };
   };
 
   const checkCol = (col, player) => {
     const colArr = [board[0][col], board[1][col], board[2][col]];
     if (checkEveryValue(colArr, board[0][col])) {
-      announceWhoWon(player);
+      setWinnerPlayer(player);
     };
   };
 
@@ -82,8 +99,9 @@ const playGame = (() => {
     return arr.every((value) => value === valueToCheck && value != 'n');
   };
 
-  const announceWhoWon = (player) => {
-    player.announceWin();
+  const setWinnerPlayer = (player) => {
+    player.winner = true;
+    gameBoard.setWinnerPlayer();
     gameOngoing = false;
   };
 
@@ -121,7 +139,7 @@ gameInterface = (() => {
   }
 
   const changeMarkerIndicator = () => {
-    const markerIndicator = document.querySelector(".marker-indicator");
+    const markerIndicator = document.querySelector(".marker-indicator>p");
     markerIndicator.textContent = gameBoard.getPlayerMark();
   }
 
@@ -147,12 +165,24 @@ gameInterface = (() => {
     playGame.addMarkerToBoard(addMarkerRow, addMarkerCol);
     
     changeMarkerIndicator();
+    checkWinner();
   };
 
   const checkIfMarkerExist = (event) => {
     const markerPara = event.target.firstElementChild;
 
     return markerPara.textContent == "";
+  }
+
+  const checkWinner = () => {
+    const playerWinner = gameBoard.getWinnerPlayer();
+    if (!playGame.isOngoingGame()) {
+      announceWinner(playerWinner)
+    }
+  }
+
+  const announceWinner = (player) => {
+    player.announceWin();
   }
   
   return {gameLoop};
