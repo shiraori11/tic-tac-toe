@@ -11,15 +11,26 @@
   <!-- <div class="winner-container"> -->
   <!--   <p>Hello There</p> -->
   <!-- </div> -->
-  <div class="display-container">
-    <div class="left-player-name">
-      <input type="text">
+  <div class="main-menu">
+    <div class="player-name-input">
+      <label for="player1-name">Player 1: </label>
+      <input type="text" id="player1-name" placeholder="Player 1">
+      <label for="player2-name">Player 2:</label>
+      <input type="text" id="player2-name" placeholder="Player 2">
     </div>
-    <div class="marker-indicator">
-      <p>X</p>
-    </div>  
-    <input type="text">
+    <button class="start-button">Tic Tac Go</button>
   </div>
-  <div class="game-container"></div>
+  
+  <div class="main-game">
+    <div class="display-container">
+      <p>Player 1 Name</p>
+      <div class="marker-indicator">
+        <p>X</p>
+      </div>  
+      <p>Player 2 Name</p>
+    </div>
+    <div class="game-container"></div>  
+  </div>
+  
 </body>
 </html>

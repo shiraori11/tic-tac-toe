@@ -20,7 +20,7 @@ const gameBoard = (() => {
   ];
 
   const player1 = gamePlayer("X");
-  const player2 = gamePlayer("O")
+  const player2 = gamePlayer("O");
   let whoPlayerMove = player1;
   let winnerPlayer;
 
@@ -47,8 +47,14 @@ const gameBoard = (() => {
     }
   };
   const getWinnerPlayer = () => winnerPlayer;
+  const setPlayerOneName = (name) => {
+    player1.name = name;
+  };
+  const setPlayerTwoName = (name) => {
+    player2.name = name;
+  }
 
-  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark, setWinnerPlayer, getWinnerPlayer};
+  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark, setWinnerPlayer, getWinnerPlayer, setPlayerOneName, setPlayerTwoName};
 })();
 
 const playGame = (() => {
@@ -118,6 +124,8 @@ gameInterface = (() => {
 
   const gameLoop = () => {
     addTileToInterface();
+    const startButton = document.querySelector(".start-button");
+    startButton.addEventListener("click", startGame);
   }
 
   const addTileToInterface = () => {
@@ -183,6 +191,20 @@ gameInterface = (() => {
 
   const announceWinner = (player) => {
     player.announceWin();
+  }
+
+  const startGame = () => {
+    const playerOneName = document.querySelector("#player1-name");
+    const playerTwoName = document.querySelector("#player2-name");
+
+    gameBoard.setPlayerOneName(playerOneName.value);
+    gameBoard.setPlayerTwoName(playerTwoName.value);
+
+    const mainMenu = document.querySelector(".main-menu");
+    mainMenu.style.display = "none";
+
+    const mainGame = document.querySelector(".main-game");
+    mainGame.style.display = "block";
   }
   
   return {gameLoop};

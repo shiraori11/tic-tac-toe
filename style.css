@@ -9,6 +9,21 @@ body {
   justify-content: center;
 }
 
+.main-menu {
+  display: grid;
+  grid-template-rows: 1fr 25px;
+  row-gap: 25px;
+}
+
+.player-name-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-game {
+  display: none;
+}
+
 .game-container {
   display: grid;
   grid-template-rows: repeat(3, 150px);
@@ -30,10 +45,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.left-player-name {
-  display: flex;
+  column-gap: 20px;
 }
 
 .left-player-name input{
