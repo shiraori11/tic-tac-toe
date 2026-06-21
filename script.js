@@ -53,8 +53,11 @@ const gameBoard = (() => {
   const setPlayerTwoName = (name) => {
     player2.name = name;
   }
+  getPlayerNames = () => {
+    return [player1.name ,player2.name];
+  };
 
-  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark, setWinnerPlayer, getWinnerPlayer, setPlayerOneName, setPlayerTwoName};
+  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark, setWinnerPlayer, getWinnerPlayer, setPlayerOneName, setPlayerTwoName, getPlayerNames};
 })();
 
 const playGame = (() => {
@@ -190,7 +193,7 @@ gameInterface = (() => {
   }
 
   const announceWinner = (player) => {
-    player.announceWin();
+    console.log(player.winner);
   }
 
   const startGame = () => {
@@ -205,7 +208,19 @@ gameInterface = (() => {
 
     const mainGame = document.querySelector(".main-game");
     mainGame.style.display = "block";
-  }
+
+    setPlayerNameDisplay()
+  };
+
+  const setPlayerNameDisplay = () => {
+    const playerOneName = document.querySelector(".player-one-para")
+    const playerTwoName = document.querySelector(".player-two-para");
+
+    [player1, player2] = gameBoard.getPlayerNames();
+
+    playerOneName.textContent = player1;
+    playerTwoName.textContent = player2;
+  };
   
   return {gameLoop};
 })();
