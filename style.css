@@ -11,6 +11,7 @@ body {
 
 .main-menu {
   display: grid;
+  /* display: none; */
   grid-template-rows: 1fr 25px;
   row-gap: 25px;
 }
@@ -22,6 +23,48 @@ body {
 
 .main-game {
   display: none;
+}
+
+.main-result {
+  display: none;
+}
+
+.game-score {
+  display: flex;
+  justify-content: space-between;
+  column-gap: 20px;
+  padding-bottom: 50px;
+}
+
+.game-result-para {
+  font-size: 52px;
+  font-weight: bold;
+}
+
+.player-score {
+  /* border: 2px solid grey; */
+  padding: 10px;
+
+}
+
+.result-button {
+  font-size: 24px;
+}
+
+.player-score-name {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.player-score-score {
+  font-size: 24px;
+  justify-self: center;
+}
+
+.main-result-button {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 }
 
 .game-container {

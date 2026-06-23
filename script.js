@@ -22,7 +22,7 @@ const gameBoard = (() => {
   const player1 = gamePlayer("X");
   const player2 = gamePlayer("O");
   let whoPlayerMove = player1;
-  let winnerPlayer;
+  let winnerPlayer = "";
 
   const mark = (row, col, marker) => {
     board[row][col] = marker;
@@ -57,7 +57,17 @@ const gameBoard = (() => {
     return [player1.name ,player2.name];
   };
 
-  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark, setWinnerPlayer, getWinnerPlayer, setPlayerOneName, setPlayerTwoName, getPlayerNames};
+  getPlayerScore = () => {
+    return [player1.getScore(), player2.getScore()];
+  };
+
+  resetGameBoard = () => {
+    board = [["n", "n", "n"], ["n", "n", "n"], ["n", "n", "n"]];
+    whoPlayerMove = player1;
+    winnerPlayer = "";
+  }
+
+  return {mark, getBoard, changeWhoPlayerMove, getWhoPlayerMove, getPlayerMark, setWinnerPlayer, getWinnerPlayer, setPlayerOneName, setPlayerTwoName, getPlayerNames, getPlayerScore, resetGameBoard};
 })();
 
 const playGame = (() => {
@@ -118,7 +128,11 @@ const playGame = (() => {
 
   const isOngoingGame = () => gameOngoing;
 
-  return {addMarkerToBoard, isOngoingGame, getMarker};
+  const resetGameState = () => {
+    gameOngoing = true;
+  };
+
+  return {addMarkerToBoard, isOngoingGame, getMarker, resetGameState};
 })();
 
 gameInterface = (() => {
@@ -129,6 +143,25 @@ gameInterface = (() => {
     addTileToInterface();
     const startButton = document.querySelector(".start-button");
     startButton.addEventListener("click", startGame);
+
+    const resetButton = document.querySelector(".result-button");
+    resetButton.addEventListener("click", playAgainFunc);
+  }
+
+  const resetGame = () => {
+    gameContainer.innerHTML = "";
+    addTileToInterface();
+    gameBoard.resetGameBoard();
+    playGame.resetGameState();
+  }
+
+  const playAgainFunc = () => {
+    resetGame();
+    const mainGame = document.querySelector(".main-game");
+    mainGame.style.display = "grid";
+    const mainResult = document.querySelector(".main-result");
+    mainResult.style.display = "none";
+
   }
 
   const addTileToInterface = () => {
@@ -193,7 +226,17 @@ gameInterface = (() => {
   }
 
   const announceWinner = (player) => {
-    console.log(player.winner);
+    const resultPara = document.querySelector(".game-result-para");
+    resultPara.textContent = `${player.name} wins!`;
+
+    const mainGame = document.querySelector(".main-game");
+    mainGame.style.display = "none";
+
+    const mainResult = document.querySelector(".main-result");
+    mainResult.style.display = "block";
+    player.addScore();
+    player.winner = false;
+    setPlayerResult();
   }
 
   const startGame = () => {
@@ -221,6 +264,21 @@ gameInterface = (() => {
     playerOneName.textContent = player1;
     playerTwoName.textContent = player2;
   };
+
+  const setPlayerResult = () => {
+    const playerOneName = document.querySelector("#player-one-result");
+    const playerTwoName = document.querySelector("#player-two-result");
+    const playerOneScore = document.querySelector("#player-one-score");
+    const playerTwoScore = document.querySelector("#player-two-score");
+
+    [player1, player2] = gameBoard.getPlayerNames();
+    [score1, score2] = gameBoard.getPlayerScore();
+    
+    playerOneName.textContent = player1;
+    playerTwoName.textContent = player2;
+    playerOneScore.textContent = score1;
+    playerTwoScore.textContent = score2;
+  }
   
   return {gameLoop};
 })();
